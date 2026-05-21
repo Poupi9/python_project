@@ -1,0 +1,51 @@
+@startuml diagram.puml
+
+class Movie {
+    +int id
+    +String title
+    +String genre
+    +String synopsis
+    +int year
+    +float rating
+}
+
+class DatabaseManager {
+    -String db_path
+    +__init__(db_path)
+    +insert_movie(movie: Movie)
+    +get_all_movies() List
+    +get_by_genre(genre: String) List
+    +search(query: String) List
+    +filter(genre: String, query: String) List
+    +update_movie(movie: Movie)
+    +delete_movie(id: int)
+    +get_genres() List
+    +close()
+}
+
+class App {
+    -DatabaseManager db
+    +__init__()
+    +_on_search()
+    +_on_genre_change()
+    +_render_movies(movies: List)
+}
+
+class MovieCard {
+    +Movie movie
+    +__init__(parent, movie)
+    +on_click()
+}
+
+class MovieDetailWindow {
+    +Movie movie
+    +__init__(parent, movie)
+}
+
+App --> DatabaseManager : instantiates
+DatabaseManager --> Movie : manages
+App "1" *-- "*" MovieCard : generates
+MovieCard ..> MovieDetailWindow : opens
+MovieDetailWindow --> Movie : displays
+
+@enduml
