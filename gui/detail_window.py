@@ -81,7 +81,7 @@ class MovieDetailWindow(tk.Toplevel):
         tk.Button(
             footer, text="Close",
             font=("Helvetica", 11, "bold"),
-            bg=ACCENT, fg=ACCENT, activebackground="#c73652",
+            bg=ACCENT, fg="#000000", activebackground="#c73652",
             activeforeground="#ffffff", relief=tk.FLAT,
             borderwidth=0, highlightthickness=0,
             padx=24, pady=8, cursor="hand2",
@@ -92,7 +92,7 @@ class MovieDetailWindow(tk.Toplevel):
             tk.Button(
                 footer, text="Delete",
                 font=("Helvetica", 11, "bold"),
-                bg="#c0392b", fg=ACCENT, activebackground="#a93226",
+                bg="#c0392b", fg="#000000", activebackground="#a93226",
                 activeforeground="#ffffff", relief=tk.FLAT,
                 borderwidth=0, highlightthickness=0,
                 padx=24, pady=8, cursor="hand2",
