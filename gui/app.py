@@ -21,7 +21,7 @@ class App(tk.Tk):
     def __init__(self) -> None:
         """Initialise the window, open the database, seed data, and render the grid."""
         super().__init__()
-        self.title("CineDB")
+        self.title("Watchlist")
         self.geometry("1200x800")
         self.minsize(800, 600)
         self.configure(bg=BG)
@@ -34,6 +34,7 @@ class App(tk.Tk):
         self._debounce_id: str | None = None
 
         self._build_header()
+        self._build_footer()
         self._build_grid()
         self._render_movies(self._db.get_all_movies())
 
@@ -45,7 +46,7 @@ class App(tk.Tk):
         header.pack(fill=tk.X)
 
         tk.Label(
-            header, text="CineDB", font=("Helvetica", 22, "bold"),
+            header, text="Watchlist", font=("Helvetica", 22, "bold"),
             bg=HEADER_BG, fg=ACCENT,
         ).pack(side=tk.LEFT)
 
@@ -89,6 +90,21 @@ class App(tk.Tk):
         ).pack(side=tk.LEFT, ipady=5, ipadx=8)
 
         self._search_var.trace_add("write", lambda *_: self._on_search())
+
+    def _build_footer(self) -> None:
+        """Build the bottom bar with the Add Movie button."""
+        footer = tk.Frame(self, bg=HEADER_BG, pady=12, padx=24)
+        footer.pack(fill=tk.X, side=tk.BOTTOM)
+
+        tk.Button(
+            footer, text="+ Add Movie",
+            font=("Helvetica", 11, "bold"),
+            bg=ACCENT, fg=ACCENT, activebackground="#c73652",
+            activeforeground="#ffffff", relief=tk.FLAT,
+            borderwidth=0, highlightthickness=0,
+            padx=24, pady=10, cursor="hand2",
+            command=self._on_add_click,
+        ).pack(side=tk.RIGHT)
 
     def _build_grid(self) -> None:
         """Build the scrollable canvas that hosts the movie card grid."""
@@ -142,7 +158,22 @@ class App(tk.Tk):
     def _on_card_click(self, movie: Movie) -> None:
         """Open the detail popup for the clicked movie."""
         from gui.detail_window import MovieDetailWindow
-        MovieDetailWindow(self, movie)
+        MovieDetailWindow(self, movie, on_delete=self._on_movie_deleted)
+
+    def _on_add_click(self) -> None:
+        """Open the Add Movie form."""
+        from gui.add_movie_window import AddMovieWindow
+        AddMovieWindow(self, genres=self._db.get_genres(), on_add=self._on_movie_added)
+
+    def _on_movie_added(self, movie: Movie) -> None:
+        """Insert the new movie and refresh the grid."""
+        self._db.insert_movie(movie)
+        self._apply_filter()
+
+    def _on_movie_deleted(self, movie_id: int) -> None:
+        """Delete the movie and refresh the grid."""
+        self._db.delete_movie(movie_id)
+        self._apply_filter()
 
     def _on_close(self) -> None:
         """Close the database connection before destroying the window."""
