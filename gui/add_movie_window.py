@@ -90,7 +90,7 @@ class AddMovieWindow(tk.Toplevel):
         tk.Button(
             footer, text="Add Movie",
             font=("Helvetica", 11, "bold"),
-            bg=ACCENT, fg=ACCENT, activebackground="#c73652",
+            bg=ACCENT, fg=TEXT, activebackground="#c73652",
             activeforeground="#ffffff", relief=tk.FLAT,
             borderwidth=0, highlightthickness=0,
             padx=24, pady=10, cursor="hand2",
